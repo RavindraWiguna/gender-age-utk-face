@@ -64,7 +64,7 @@ def cut_face(keypoints, img_color, rect):
     ex = sx+h
   else:
     ey = sy+w
-    
+
   cntr_left_eye = keypoints['left_eye']
   cntr_right_eye = keypoints['right_eye']
 
@@ -82,7 +82,7 @@ def extract_faces(img_color, face_detector):
   procesed_img = preprocess_image_for_face(img_color)
 
   # detect faces
-  result = face_detector.detect_faces(procesed_img)
+  result = face_detector.detect_faces(procesed_img, box_format="xyxy")
 
   # cut for each ect
   faces_cut = []
