@@ -52,8 +52,8 @@ def preprocess_image_for_face(img):
   new_width, new_height = int(width*scale_size), int(height*scale_size)
 
   procesed_img = img.resize((new_width, new_height))
-  procesed_img = np.array(procesed_img)
-  return procesed_img
+  procesed_img_np = np.array(procesed_img)
+  return procesed_img_np, procesed_img
 
 def cut_face(keypoints, img_color, rect):
   sx,sy,ex,ey = rect
@@ -71,7 +71,7 @@ def cut_face(keypoints, img_color, rect):
   # check which one is higher
   deg = calc_degree(cntr_left_eye, cntr_right_eye)
   if(np.abs(deg) < 11.25):
-    print(deg)
+    # print(deg)
     deg = 0
   croped_face = img_color.crop((sx, sy, ex, ey))
   aligned = croped_face.rotate(deg, expand=True)
@@ -79,10 +79,10 @@ def cut_face(keypoints, img_color, rect):
   # return croped_face
 
 def extract_faces(img_color, face_detector):
-  procesed_img = preprocess_image_for_face(img_color)
+  procesed_img_np, procesed_img = preprocess_image_for_face(img_color)
 
   # detect faces
-  result = face_detector.detect_faces(procesed_img, box_format="xyxy")
+  result = face_detector.detect_faces(procesed_img_np, box_format="xyxy")
 
   # cut for each ect
   faces_cut = []
@@ -90,7 +90,7 @@ def extract_faces(img_color, face_detector):
     rect = data['box']
     kp = data['keypoints']
 
-    cutted_face = cut_face(kp, img_color, rect)
+    cutted_face = cut_face(kp, procesed_img, rect)
     faces_cut.append(cutted_face)
 
   return faces_cut
