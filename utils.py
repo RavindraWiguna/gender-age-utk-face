@@ -52,25 +52,23 @@ def preprocess_image_for_face(img):
   new_width, new_height = int(width*scale_size), int(height*scale_size)
 
   procesed_img = img.resize((new_width, new_height))
-  procesed_img = ImageOps.grayscale(procesed_img)
   procesed_img = np.array(procesed_img)
   return procesed_img
 
-def cut_face(procesed_img, img_color, rect, landmark_predictor):
-  sx,sy,ex,ey = convert_and_trim_bb(procesed_img, rect)
-
-  shape = landmark_predictor(procesed_img, rect)
-  shape = shape_to_np(shape)
-  right_right_eye = shape[0]
-  right_left_eye = shape[1]
-  left_left_eye = shape[2]
-  left_right_eye = shape[3]
-
-  cntr_right_eye = (right_left_eye + right_right_eye)//2
-  cntr_left_eye = (left_left_eye + left_right_eye) //2
+def cut_face(keypoints, img_color, rect):
+  sx,sy,ex,ey = rect
+  w = ex-sx
+  h = ey-sy
+  if(h > w):
+    # make it square
+    ex = sx+h
+  else:
+    ey = sy+w
+    
+  cntr_left_eye = keypoints['left_eye']
+  cntr_right_eye = keypoints['right_eye']
 
   # check which one is higher
-  delta_y_eye = cntr_left_eye[1]-cntr_right_eye[1]
   deg = calc_degree(cntr_left_eye, cntr_right_eye)
   if(np.abs(deg) < 11.25):
     print(deg)
@@ -80,16 +78,19 @@ def cut_face(procesed_img, img_color, rect, landmark_predictor):
   return aligned
   # return croped_face
 
-def extract_faces(img_color, face_detector, landmark_predictor):
+def extract_faces(img_color, face_detector):
   procesed_img = preprocess_image_for_face(img_color)
 
   # detect faces
-  rects = face_detector(procesed_img, 0)
+  result = face_detector.detect_faces(procesed_img)
 
   # cut for each ect
   faces_cut = []
-  for rect in rects:
-    cutted_face = cut_face(procesed_img, img_color, rect, landmark_predictor)
+  for data in result:
+    rect = data['box']
+    kp = data['keypoints']
+
+    cutted_face = cut_face(kp, img_color, rect)
     faces_cut.append(cutted_face)
 
   return faces_cut

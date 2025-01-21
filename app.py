@@ -3,7 +3,7 @@ import gradio as gr
 import os
 import torch
 from torch import nn
-import dlib
+from mtcnn import MTCNN
 
 from utils import extract_faces, pred_face
 from typing import Tuple, Dict
@@ -58,13 +58,13 @@ female_age_clf = nn.Sequential(
 female_age_clf.load_state_dict(torch.load(female_age_clf_weight_path, map_location=torch.device(device)))
 
 ## 6. face detector & landmark detector
-face_detector = dlib.get_frontal_face_detector()
-landmark_predictor = dlib.shape_predictor(landmark_detector_path)
+face_detector = MTCNN(device="CPU:0")
+
 
 # our main predict function
 def predict(img):
   # extract faces
-  faces_detected = extract_faces(img, face_detector, landmark_predictor)
+  faces_detected = extract_faces(img, face_detector)
 
   # pred each faces
   pred_results = []
