@@ -99,6 +99,9 @@ def extract_class_probability_torch(probabilities, index_to_class, is_from_numpy
   if(is_from_numpy):
     probabilities = torch.from_numpy(probabilities)
 
+  if(isinstance(probabilities, list)):
+    probabilities = torch.tensor(probabilities) # somehow??
+
   index_max = torch.argmax(probabilities, dim=0)
   index_class = index_to_class[index_max]
   index_prob = probabilities[index_max]
@@ -107,7 +110,7 @@ def extract_class_probability_torch(probabilities, index_to_class, is_from_numpy
 def turn_pred_to_human_readable(is_baby_prob, is_female_prob, ages_prob):
 
   gender_class, gender_prob = extract_class_probability_torch(is_female_prob, ['Male', 'Female'])
-  baby_class, baby_prob = extract_class_probability_torch(is_baby_prob, ['Age >= 5', 'Age < 5'], True)
+  # baby_class, baby_prob = extract_class_probability_torch(is_baby_prob, ['Age >= 5', 'Age < 5'], True)
   age_class, age_prob = extract_class_probability_torch(ages_prob, ['0-4','5-9','10-19','20-29','30-39','40-49','50-64','65++'])
 
   return f'Gender: {gender_class} ({gender_prob:.2%}) | Age: {age_class} ({age_prob:.2%})'
