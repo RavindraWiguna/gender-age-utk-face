@@ -6,4 +6,5 @@ joblib==1.4.2
 numpy==1.26.4
 pandas==2.2.2
 lz4==4.3.3
+tensorflow==2.17.1
 mtcnn
