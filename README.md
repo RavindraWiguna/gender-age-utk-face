@@ -24,6 +24,8 @@ While the gender classification model achieve great result (93% on both training
 
 The age will be classified into 8 age groups: (0-4), (5-9), (10-19), (20-29), (30-39), (40-49), (50-64), and (65++)
 
+Sometimes, huggingface will set the app to "sleep" mode due to inactivity (48h) and need to be restarted.
+
 ## Live Demo
 visit: https://huggingface.co/spaces/ravindrawiguna/my-age-gender-utkface
 
