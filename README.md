@@ -17,9 +17,20 @@ Here's the flow of the app:
 9. After the face's features been extracted, we then pass this vector of 1280 elements to a gender classifier and age estimator.
 10. We take the highest probability class and output it as the label of each faces. Each face will have the predicted gender and age group.
 
+## Performance and other notes
+Since these models are deployed without GPU, the inference time will be a little bit slow (~20 seconds).
+
+While the gender classification model achieve great result (93% on both training and testing accuracy), estimating one's age based on face is rather a difficult task. My model only achieved around ~35% Accuracy on both training and testing set.
+
+The age will be classified into 8 age groups: (0-4), (5-9), (10-19), (20-29), (30-39), (40-49), (50-64), and (65++)
+
 ## Live Demo
 visit: https://huggingface.co/spaces/ravindrawiguna/my-age-gender-utkface
 
 ## Screenshots
+![Initial app looks](https://github.com/RavindraWiguna/gender-age-utk-face/blob/8c0f7dc3f7cd51108f48a2926ceb43820014d0cc/screenshots/ClearSS.png)
 
+![Example with 1 person](https://github.com/RavindraWiguna/gender-age-utk-face/blob/8c0f7dc3f7cd51108f48a2926ceb43820014d0cc/screenshots/LennaSS.png)
+
+![Example with 2 person](https://github.com/RavindraWiguna/gender-age-utk-face/blob/8c0f7dc3f7cd51108f48a2926ceb43820014d0cc/screenshots/SS2Teen.png)
 
